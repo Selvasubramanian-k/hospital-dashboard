@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import Sidebar from "./components/Sidebar.jsx";
 import Topbar from "./components/Topbar.jsx";
@@ -13,27 +14,16 @@ import Billing from "./pages/Billing.jsx";
 import Departments from "./pages/Departments.jsx";
 import Settings from "./pages/Settings.jsx";
 
-const pages = {
-  dashboard: Dashboard,
-  patients: Patients,
-  doctors: Doctors,
-  appointments: Appointments,
-  emergency: Emergency,
-  laboratory: Laboratory,
-  pharmacy: Pharmacy,
-  billing: Billing,
-  departments: Departments,
-  settings: Settings,
-};
-
-export default function App() {
-  const [activePage, setActivePage] = useState("dashboard");
+function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const PageComponent = pages[activePage] || Dashboard;
+  // Derive activePage from the current URL path
+  const activePage = location.pathname.replace("/", "") || "dashboard";
 
   const handleNavigate = (page) => {
-    setActivePage(page);
+    navigate(page === "dashboard" ? "/" : `/${page}`);
     setSidebarOpen(false);
   };
 
@@ -54,8 +44,29 @@ export default function App() {
           activePage={activePage}
           onMenuClick={() => setSidebarOpen(true)}
         />
-        <PageComponent />
+        <Routes>
+          <Route path="/"             element={<Dashboard />} />
+          <Route path="/patients"     element={<Patients />} />
+          <Route path="/doctors"      element={<Doctors />} />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/emergency"    element={<Emergency />} />
+          <Route path="/laboratory"   element={<Laboratory />} />
+          <Route path="/pharmacy"     element={<Pharmacy />} />
+          <Route path="/billing"      element={<Billing />} />
+          <Route path="/departments"  element={<Departments />} />
+          <Route path="/settings"     element={<Settings />} />
+          {/* Fallback */}
+          <Route path="*"             element={<Dashboard />} />
+        </Routes>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
   );
 }
