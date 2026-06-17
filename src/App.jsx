@@ -47,7 +47,7 @@ function AppLayout({ user, onLogout }) {
           onLogout={onLogout}
         />
         <Routes>
-          <Route path="/"             element={<Dashboard />} />
+          <Route path="/"             element={<Dashboard user={user} />} />
           <Route path="/patients"     element={<Patients />} />
           <Route path="/doctors"      element={<Doctors />} />
           <Route path="/appointments" element={<Appointments />} />
@@ -57,7 +57,7 @@ function AppLayout({ user, onLogout }) {
           <Route path="/billing"      element={<Billing />} />
           <Route path="/departments"  element={<Departments />} />
           <Route path="/settings"     element={<Settings />} />
-          <Route path="*"             element={<Dashboard />} />
+          <Route path="*"             element={<Dashboard user={user} />} />
         </Routes>
       </div>
     </div>

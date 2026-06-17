@@ -18,6 +18,13 @@ const stats = [
   { icon: "💰", label: "Monthly Revenue", value: "₹2.5L", change: "+8.1%", dir: "up", color: "teal" },
 ];
 
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
+};
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
@@ -34,11 +41,13 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function Dashboard() {
+export default function Dashboard({ user }) {
+  const displayName = user?.name || "Admin";
+
   return (
     <div className="page-content">
       <div className="page-header">
-        <h1>Good Morning, Admin! 👋</h1>
+        <h1>{getGreeting()}, {displayName}! 👋</h1>
         <p>Here's what's happening at Meenakshi Medical Hospital today.</p>
       </div>
 
@@ -60,7 +69,6 @@ export default function Dashboard() {
 
       {/* Charts */}
       <div className="charts-grid">
-        {/* Line chart */}
         <div className="chart-card">
           <div className="chart-card-header">
             <div>
@@ -87,7 +95,6 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Donut chart */}
         <div className="chart-card">
           <div className="chart-card-header">
             <div>
@@ -125,7 +132,6 @@ export default function Dashboard() {
 
       {/* Bottom */}
       <div className="bottom-grid">
-        {/* Recent Patients */}
         <div className="table-card">
           <div className="table-card-header">
             <h3>Recent Patients</h3>
@@ -167,7 +173,6 @@ export default function Dashboard() {
           </table>
         </div>
 
-        {/* Bed Occupancy */}
         <div className="bed-card">
           <h3>Bed Occupancy</h3>
           <div className="bed-card-subtitle">By Department</div>
