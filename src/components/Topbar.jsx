@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Search, Bell, Menu, Moon, Sun } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Search, Bell, Menu, Moon, Sun, LogOut, User, ChevronDown } from "lucide-react";
 
 const pageTitles = {
   dashboard: "Dashboard Overview",
@@ -14,10 +14,12 @@ const pageTitles = {
   settings: "Settings",
 };
 
-export default function Topbar({ activePage, onMenuClick }) {
+export default function Topbar({ activePage, onMenuClick, user, onLogout }) {
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (isDark) {
@@ -28,6 +30,26 @@ export default function Topbar({ activePage, onMenuClick }) {
       localStorage.setItem("theme", "light");
     }
   }, [isDark]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const displayName = user?.name || "Admin";
+  const displayRole = user?.role || "Super Admin";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <header className="topbar">
@@ -45,24 +67,60 @@ export default function Topbar({ activePage, onMenuClick }) {
       </div>
 
       <div className="topbar-actions">
-        {/* Theme Toggle Button */}
+        {/* Theme Toggle */}
         <button
           className="topbar-btn"
-          onClick={() => setIsDark(prev => !prev)}
+          onClick={() => setIsDark((prev) => !prev)}
           aria-label="Toggle theme"
           title={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {isDark ? <Sun size={16} /> : <Moon size={16} />}
         </button>
 
+        {/* Notification Bell */}
         <button className="topbar-btn">
           <Bell size={16} />
           <span className="topbar-notif-dot" />
         </button>
 
-        <div className="topbar-admin">
-          <div className="topbar-admin-avatar">AD</div>
-          <span>Admin</span>
+        {/* User Avatar Dropdown */}
+        <div className="topbar-user-wrap" ref={dropdownRef}>
+          <button
+            className="topbar-admin"
+            onClick={() => setDropdownOpen((o) => !o)}
+            aria-label="User menu"
+          >
+            <div className="topbar-admin-avatar">{initials}</div>
+            <span>{displayName}</span>
+            <ChevronDown size={14} className={`topbar-chevron${dropdownOpen ? " open" : ""}`} />
+          </button>
+
+          {dropdownOpen && (
+            <div className="topbar-dropdown">
+              <div className="topbar-dropdown-user">
+                <div className="topbar-dropdown-avatar">{initials}</div>
+                <div>
+                  <div className="topbar-dropdown-name">{displayName}</div>
+                  <div className="topbar-dropdown-role">{displayRole}</div>
+                </div>
+              </div>
+              <div className="topbar-dropdown-divider" />
+              <button
+                className="topbar-dropdown-item"
+                onClick={() => { setDropdownOpen(false); }}
+              >
+                <User size={14} />
+                <span>My Profile</span>
+              </button>
+              <button
+                className="topbar-dropdown-item danger"
+                onClick={() => { setDropdownOpen(false); onLogout(); }}
+              >
+                <LogOut size={14} />
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
