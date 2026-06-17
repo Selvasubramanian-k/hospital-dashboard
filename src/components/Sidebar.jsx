@@ -18,7 +18,16 @@ const navItems = [
   { icon: Settings,        label: "Settings",     key: "settings" },
 ];
 
-export default function Sidebar({ activePage, onNavigate, isOpen, onClose }) {
+export default function Sidebar({ activePage, onNavigate, isOpen, onClose, user }) {
+  const displayName = user?.name || "Admin";
+  const displayRole = user?.role || "Super Admin";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <aside className={`sidebar${isOpen ? " open" : ""}`}>
       <div className="sidebar-logo">
@@ -54,10 +63,10 @@ export default function Sidebar({ activePage, onNavigate, isOpen, onClose }) {
 
       <div className="sidebar-footer">
         <div className="sidebar-user">
-          <div className="sidebar-user-avatar">AD</div>
+          <div className="sidebar-user-avatar">{initials}</div>
           <div className="sidebar-user-info">
-            <h4>Admin</h4>
-            <span>Super Admin</span>
+            <h4>{displayName}</h4>
+            <span>{displayRole}</span>
           </div>
         </div>
       </div>

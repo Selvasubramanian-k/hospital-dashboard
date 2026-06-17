@@ -38,6 +38,7 @@ function AppLayout({ user, onLogout }) {
         onNavigate={handleNavigate}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        user={user}
       />
       <div className="main-content">
         <Topbar
