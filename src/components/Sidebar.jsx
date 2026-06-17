@@ -10,7 +10,7 @@ const navItems = [
   { icon: Users,           label: "Patients",     key: "patients" },
   { icon: Stethoscope,     label: "Doctors",      key: "doctors" },
   { icon: Calendar,        label: "Appointments", key: "appointments" },
-  { icon: AlertTriangle,   label: "Emergency",    key: "emergency", badge: "18" },
+  { icon: AlertTriangle,   label: "Emergency",    key: "emergency", badge: "12" },
   { icon: FlaskConical,    label: "Laboratory",   key: "laboratory" },
   { icon: Pill,            label: "Pharmacy",     key: "pharmacy" },
   { icon: Receipt,         label: "Billing",      key: "billing" },
